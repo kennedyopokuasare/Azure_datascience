@@ -1,7 +1,7 @@
 
 # Machine Learning with Microsoft Azure
 
-**Microsoft Azure** provides the cloud infrastructure for scalable, production-grade Machine Learning with minimal code. Azure offers tools for the full lifecycle of Machine Learning, including the productionization and monitoring of models.
+**Microsoft Azure Machine Learning** provides the cloud infrastructure, DataStores, scalable and on-demand compute, machine learning workflows for production-grade Machine Learning. Azure offers tools for the full lifecycle of Machine Learning, including the productionization and monitoring of models.
 
 In previous Machine Learning work [[1](https://github.com/kennedyopokuasare/IBM_datascience), [2](https://github.com/kennedyopokuasare), [3](https://github.com/kennedyopokuasare/carat-analysis)], I have executed entire machine learning pipelines, from data cleaning to prediction, using my personal computer, Jupyter Notebook, and Snakemake for workflow management. There are bottlenecks when training machine learning models with large datasets on a personal computer with limited resources, especially when multiple experiments need to be conducted — a case in point is when I trained [five machine learning algorithms to predict the depression status of participants](https://www.sciencedirect.com/science/article/pii/S1574119222000566). 
 
@@ -17,6 +17,8 @@ For instance:
 
 
 ## Automated Machine Learning in Azure ML studio
+
+`Automated Machine Learning` allows for automated training of multiple machine learning models, in parallel to predict a target, without the need to write code. AutoML selects the best models and data transformations based on a the estimator's metrics. 
 
 ## AutoML completed, with MaxAbsScaler and XGBoostRegressor
 
