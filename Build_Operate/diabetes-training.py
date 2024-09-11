@@ -1,10 +1,15 @@
 # import libraries
+from azureml.core import Run
+import joblib
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import roc_curve
+
+# Get the experiment run context 
+run = Run.get_context()
 
 # load the diabetes dataset
 print("Loading Data...")
@@ -27,9 +32,18 @@ model = LogisticRegression(C=1/reg, solver="liblinear").fit(X_train, y_train)
 # calculate accuracy
 y_hat = model.predict(X_test)
 acc = np.average(y_hat == y_test)
-print('Accuracy:', acc)
+print('Accuracy:', float(acc))
+run.log('Accuracy:', float(acc))
 
 # calculate AUC
 y_scores = model.predict_proba(X_test)
 auc = roc_auc_score(y_test,y_scores[:,1])
 print('AUC: ' + str(auc))
+run.log('AUC: ', float(auc))
+
+# Save the model
+os.makedirs('outputs', exist_ok=True)
+joblib.dump(value=model, filename='outputs/model.pkl')
+
+# complete the experiment
+run.complete()
