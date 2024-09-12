@@ -125,6 +125,29 @@ In this [source](./Build_Operate/experiments_with_scripts/01-Runing-experiments-
 
 ### Experiment job run
 
+```python
+from azureml.core import ScriptRunConfig, Environment
+
+env = Environment.from_existing_conda_environment(name="automate", conda_environment_name= "automate")
+env.python.user_managed_dependencies = True
+env.register(workspace=ws)
+
+# Define arguments / parameters
+
+test_size = 0.30
+reg_rate = 0.01
+
+script_config = ScriptRunConfig(
+    source_directory=".",
+    script="diabetes-training.py",
+    arguments=["--reg-rate", reg_rate, "--test-size", test_size],
+    environment=env,
+)
+
+run = experiment.submit(config=script_config)
+run.wait_for_completion(show_output=False)
+```
+
 <img src="./Build_Operate/experiments_with_scripts/1. job run.png" alt="drawing" width="1200"/>
 
 
