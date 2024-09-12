@@ -125,6 +125,9 @@ In this [source](./Build_Operate/experiments_with_scripts/01-Runing-experiments-
 
 ### Experiment job run
 
+Here, the Experiment is created in Azure with `local compute target`. An Azure compute instance target can also be specified using the `RunConfiguration` of the `ScriptRunConfig`. "Test data size (`test_size`) and Regularization rate (`reg_rate`) for the `LogisticRegression` are passed as parameters. Other parameters such as a registered dataset in a data store could also be passed.
+
+
 ```python
 from azureml.core import ScriptRunConfig, Environment
 
