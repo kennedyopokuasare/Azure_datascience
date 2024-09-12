@@ -1,3 +1,5 @@
 /.DS_Store
 config.json
 azureml_outputs/*
+Build_Operate/experiments_with_scripts/.DS_Store
+Build_Operate/experiments_with_scripts/outputs/.DS_Store

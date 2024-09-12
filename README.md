@@ -121,13 +121,13 @@ Probability: 0.75
 
 In most cases, production systems intergrate Azure Machine Learning into existing code bases. Therefore, the ML Designer and AutoML may not be the ideal choice in such instances. The Azure Machine Learning Python SDK provides creating scripts that can be use build and operate Machine Learning systems. For aditional details, see the [What is the Azure Machine Learning SDK for Python](https://learn.microsoft.com/en-us/python/api/overview/azure/ml/?view=azure-ml-py) guide.
 
-In this [source](./Build_Operate/01-Runing-experiments-on-azure-with-scripts.ipynb), I use Azure Machine Learning Python SDK to create an Experiment, configure and run a script that uses LogisticRegresion to predict diabetic status, and Registers the model output in an Azure Machine Learning workspace.
+In this [source](./Build_Operate/experiments_with_scripts/01-Runing-experiments-on-azure-with-scripts.ipynb), I use Azure Machine Learning Python SDK to create an Experiment, configure and run a script that uses LogisticRegresion to predict diabetic status, and Registers the model output in an Azure Machine Learning workspace.
 
 ### Experiment job run
 
-<img src="./Build_Operate/1. job run.png" alt="drawing" width="1200"/>
+<img src="./Build_Operate/experiments_with_scripts/1. job run.png" alt="drawing" width="1200"/>
 
 
 ### Registered model
 
-<img src="./Build_Operate/2. registered model.png" alt="drawing" width="1200"/>
+<img src="./Build_Operate/experiments_with_scripts/2. registered model.png" alt="drawing" width="1200"/>
