@@ -156,4 +156,20 @@ run.wait_for_completion(show_output=False)
 
 ### Registered model
 
+```python
+import sklearn
+from azureml.core import Model
+
+filename = 'outputs/model.pkl'
+
+run.register_model(
+    model_name="diabetes-classification-model",
+    model_path = filename,
+    description = "A LogisticRegression classification model for Diabetes",
+    tags = { 'data-format':"CSV", "regularization-rate":reg_rate, "test-size": test_size},
+    model_framework = Model.Framework.SCIKITLEARN,
+    model_framework_version = str(sklearn.__version__)
+)
+```
+
 <img src="./Build_Operate/experiments_with_scripts/2. registered model.png" alt="drawing" width="1200"/>
