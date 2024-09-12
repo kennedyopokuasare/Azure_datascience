@@ -3,7 +3,7 @@
 
 **Microsoft Azure Machine Learning** provides the cloud infrastructure, DataStores, scalable and on-demand compute, machine learning workflows for production-grade Machine Learning. Azure offers tools for the full lifecycle of Machine Learning, including the productionization and monitoring of models.
 
-In previous Machine Learning work [[1](https://github.com/kennedyopokuasare/IBM_datascience), [2](https://github.com/kennedyopokuasare), [3](https://github.com/kennedyopokuasare/carat-analysis)], I have executed entire machine learning pipelines, from data cleaning to prediction, using my personal computer, Jupyter Notebook, and Snakemake for workflow management. There are bottlenecks when training machine learning models with large datasets on a personal computer with limited resources, especially when multiple experiments need to be conducted — a case in point is when I trained [five machine learning algorithms to predict the depression status of participants](https://www.sciencedirect.com/science/article/pii/S1574119222000566) as part of my PhD research.
+In previous Machine Learning work [[1](https://github.com/kennedyopokuasare/IBM_datascience), [2](https://github.com/kennedyopokuasare), [3](https://github.com/kennedyopokuasare/carat-analysis)], I have executed entire machine learning pipelines, from data cleaning to prediction, using my personal computer, Jupyter Notebook, and [Snakemake for workflow management](https://snakemake.readthedocs.io/en/stable/). There are bottlenecks when training machine learning models with large datasets on a personal computer with limited resources, especially when multiple experiments need to be conducted — a case in point is when I trained [five machine learning algorithms to predict the depression status of participants](https://www.sciencedirect.com/science/article/pii/S1574119222000566) as part of my PhD research.
 
 This repository presents a project where I use Microsoft Azure Machine Learning Cloud services for training, inferencing and Productionization of Machine Learning Models.
 
@@ -119,10 +119,15 @@ Probability: 0.75
 
 ## Building and Operating Experiments
 
-[What is the Azure Machine Learning SDK for Python and Setting up experiments with Azure](https://learn.microsoft.com/en-us/python/api/overview/azure/ml/?view=azure-ml-py)
+In most cases, production systems intergrate Azure Machine Learning into existing code bases. Therefore, the ML Designer and AutoML may not be the ideal choice in such instances. The Azure Machine Learning Python SDK provides creating scripts that can be use build and operate Machine Learning systems. For aditional details, see the [What is the Azure Machine Learning SDK for Python](https://learn.microsoft.com/en-us/python/api/overview/azure/ml/?view=azure-ml-py) guide.
 
 In this [source](./Build_Operate/01-Runing-experiments-on-azure-with-scripts.ipynb), I use Azure Machine Learning Python SDK to create an Experiment, configure and run a script that uses LogisticRegresion to predict diabetic status, and Registers the model output in an Azure Machine Learning workspace.
 
-| Experiment Job run    | Registered Model |
-| -------- | ------- |
-|<img src="./Build_Operate/1. job run.png" alt="drawing" width="1200"/>|<img src="./Build_Operate/2. registered model.png" alt="drawing" width="1200"/>|
+### Experiment job run
+
+<img src="./Build_Operate/1. job run.png" alt="drawing" width="1200"/>
+
+
+### Registered model
+
+<img src="./Build_Operate/2. registered model.png" alt="drawing" width="1200"/>
