@@ -120,3 +120,9 @@ Probability: 0.75
 ## Building and Operating Experiments
 
 [What is the Azure Machine Learning SDK for Python and Setting up experiments with Azure](https://learn.microsoft.com/en-us/python/api/overview/azure/ml/?view=azure-ml-py)
+
+In this [source](./Build_Operate/01-Runing-experiments-on-azure-with-scripts.ipynb), I use Azure Machine Learning Python SDK to create an Experiment, configure and run a script that uses LogisticRegresion to predict diabetic status, and Registers the model output in an Azure Machine Learning workspace.
+
+| Experiment Job run    | Registered Model |
+| -------- | ------- |
+|<img src="./Build_Operate/1. job run.png" alt="drawing" width="1200"/>|<img src="./Build_Operate/2. registered model.png" alt="drawing" width="1200"/>|

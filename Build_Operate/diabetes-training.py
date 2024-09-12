@@ -1,5 +1,5 @@
 # import libraries
-from azureml.core import Run
+from azureml.core import Run, Model
 import joblib
 import argparse
 import pandas as pd
@@ -15,8 +15,11 @@ run = Run.get_context()
 # Set regularization hyperparameter
 parser = argparse.ArgumentParser()
 parser.add_argument('--reg-rate', type=float, dest='reg_rate', default=0.01)
+parser.add_argument('--test-size', type=float, dest='test_size', default=0.30)
 args = parser.parse_args()
-reg = args.reg_rate
+
+reg_rate = args.reg_rate
+test_size = args.test_size
 
 # load the diabetes dataset
 print("Loading Data...")
@@ -27,11 +30,11 @@ X = diabetes[['Pregnancies','PlasmaGlucose','DiastolicBloodPressure','TricepsThi
 y = diabetes['Diabetic'].values
 
 # split data into training set and test set
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=0)
 
 # train a logistic regression model
-print('Training a logistic regression model with regularization rate of', reg)
-model = LogisticRegression(C=1/reg, solver="liblinear").fit(X_train, y_train)
+print('Training a logistic regression model with regularization rate of', reg_rate)
+model = LogisticRegression(C=1/reg_rate, solver="liblinear").fit(X_train, y_train)
 
 # calculate accuracy
 y_hat = model.predict(X_test)
@@ -46,8 +49,9 @@ print('AUC: ' + str(auc))
 run.log('AUC', float(auc))
 
 # Save the model
+filename = 'outputs/model.pkl'
 os.makedirs('outputs', exist_ok=True)
-joblib.dump(value=model, filename='outputs/model.pkl')
+joblib.dump(value=model, filename= filename)
 
 # complete the experiment
 run.complete()
