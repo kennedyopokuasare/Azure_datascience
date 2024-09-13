@@ -125,9 +125,51 @@ In this [source](./Build_Operate/experiments_with_scripts/01-Runing-experiments-
 
 ### Experiment job run
 
+Here, the Experiment is created in Azure with `local compute target`. An Azure compute instance target can also be specified using the `RunConfiguration` of the `ScriptRunConfig`. "Test data size (`test_size`) and Regularization rate (`reg_rate`) for the `LogisticRegression` are passed as parameters. Other parameters such as a registered dataset in a data store could also be passed.
+
+
+```python
+from azureml.core import ScriptRunConfig, Environment
+
+env = Environment.from_existing_conda_environment(name="automate", conda_environment_name= "automate")
+env.python.user_managed_dependencies = True
+env.register(workspace=ws)
+
+# Define arguments / parameters
+
+test_size = 0.30
+reg_rate = 0.01
+
+script_config = ScriptRunConfig(
+    source_directory=".",
+    script="diabetes-training.py",
+    arguments=["--reg-rate", reg_rate, "--test-size", test_size],
+    environment=env,
+)
+
+run = experiment.submit(config=script_config)
+run.wait_for_completion(show_output=False)
+```
+
 <img src="./Build_Operate/experiments_with_scripts/1. job run.png" alt="drawing" width="1200"/>
 
 
 ### Registered model
+
+```python
+import sklearn
+from azureml.core import Model
+
+filename = 'outputs/model.pkl'
+
+run.register_model(
+    model_name="diabetes-classification-model",
+    model_path = filename,
+    description = "A LogisticRegression classification model for Diabetes",
+    tags = { 'data-format':"CSV", "regularization-rate":reg_rate, "test-size": test_size},
+    model_framework = Model.Framework.SCIKITLEARN,
+    model_framework_version = str(sklearn.__version__)
+)
+```
 
 <img src="./Build_Operate/experiments_with_scripts/2. registered model.png" alt="drawing" width="1200"/>
