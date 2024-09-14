@@ -125,30 +125,37 @@ In this [source](./Build_Operate/experiments_with_scripts/01-Runing-experiments-
 
 ### Experiment job run
 
-Here, the Experiment is created in Azure with `local compute target`. An Azure compute instance target can also be specified using the `RunConfiguration` of the `ScriptRunConfig`. "Test data size (`test_size`) and Regularization rate (`reg_rate`) for the `LogisticRegression` are passed as parameters. Other parameters such as a registered dataset in a data store could also be passed.
+Submit a Job to run the diabetes-training.py script.  "Test data size (`test_size`) and Regularization rate (`reg_rate`) for the `LogisticRegression` are passed as parameters. Registed `diabetes_csv` data is also passed as parameter to the script
 
 
 ```python
-from azureml.core import ScriptRunConfig, Environment
+from azure.ai.ml import command, Input
+from azure.ai.ml.constants import AssetTypes, InputOutputModes
 
-env = Environment.from_existing_conda_environment(name="automate", conda_environment_name= "automate")
-env.python.user_managed_dependencies = True
-env.register(workspace=ws)
+data_asset = ml_client.data.get("diabetes_csv", version="1.0.0")
 
 # Define arguments / parameters
-
+diabetes_data = ml_client.data.get("diabetes_csv", version="1.0.0")
 test_size = 0.30
 reg_rate = 0.01
 
-script_config = ScriptRunConfig(
-    source_directory=".",
-    script="diabetes-training.py",
-    arguments=["--reg-rate", reg_rate, "--test-size", test_size],
-    environment=env,
+run_command = command(
+    code="./src",
+    command="python diabetes-training.py --data ${{inputs.data}} --test-size ${{inputs.test_size}} --reg-rate ${{inputs.reg_rate}} ",
+    inputs=dict(
+        data= Input(
+            path=diabetes_data.id,
+            type=AssetTypes.URI_FILE,
+            mode=InputOutputModes.RO_MOUNT,
+        ),
+        reg_rate = reg_rate,
+        test_size = test_size,
+    ),
+    environment="diabest-train:5",
+    experiment_name = "diabetes-training"
 )
 
-run = experiment.submit(config=script_config)
-run.wait_for_completion(show_output=False)
+returned_job = ml_client.jobs.create_or_update(run_command)
 ```
 
 <img src="./Build_Operate/experiments_with_scripts/1. job run.png" alt="drawing" width="1200"/>
