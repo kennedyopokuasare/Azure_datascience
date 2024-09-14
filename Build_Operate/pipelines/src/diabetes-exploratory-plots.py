@@ -80,6 +80,7 @@ def plot_distribution(var_data, column_name=None):
     os.makedirs("outputs", exist_ok=True)
     fig.savefig(filename)
 
+
 def plot_scatters(x_y_data):
     """
     Plot scatter plots with :y_column: on y-axis and save them. 
@@ -98,6 +99,7 @@ def plot_scatters(x_y_data):
     filename = "outputs/Scatter plot of {} vs {}.png".format(x_column,y_column)
     os.makedirs("outputs", exist_ok=True)
     fig.savefig(filename)
+
 
 print("Loading Data...")
 diabetes = pd.read_csv("../../data/diabetes.csv")
@@ -119,4 +121,3 @@ column_comb = [list(x) for x in column_comb]
 
 for x_y_pairs in column_comb:
     plot_scatters(diabetes[x_y_pairs])
-
