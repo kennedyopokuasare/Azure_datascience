@@ -23,7 +23,7 @@ test_size = args.test_size
 
 # load the diabetes dataset
 print("Loading Data...")
-diabetes = pd.read_csv('diabetes.csv')
+diabetes = pd.read_csv('../../data/diabetes.csv')
 
 # separate features and labels
 X = diabetes[['Pregnancies','PlasmaGlucose','DiastolicBloodPressure','TricepsThickness','SerumInsulin','BMI','DiabetesPedigree','Age']].values
@@ -52,6 +52,3 @@ run.log('AUC', float(auc))
 filename = 'outputs/model.pkl'
 os.makedirs('outputs', exist_ok=True)
 joblib.dump(value=model, filename= filename)
-
-# complete the experiment
-run.complete()

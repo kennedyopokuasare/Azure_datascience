@@ -154,7 +154,7 @@ run.wait_for_completion(show_output=False)
 <img src="./Build_Operate/experiments_with_scripts/1. job run.png" alt="drawing" width="1200"/>
 
 
-### Registered model
+### Registering a model
 
 ```python
 import sklearn
