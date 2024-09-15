@@ -23,6 +23,7 @@ dependencies:
   - tensorboard
   - psutil~=5.8.0
   - matplotlib~=3.5.0
+  - seaborn~=0.13.2
   - tqdm~=4.66.3
   - py-cpuinfo==5.0.0
   - torch-tb-profiler~=0.4.0

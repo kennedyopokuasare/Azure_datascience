@@ -8,7 +8,7 @@ from itertools import combinations
 import argparse
 
 # Create a function that we can re-use
-def plot_correlations(data):
+def plot_correlations(data,output_path="outputs"):
     """
     This function will make a correlation graph and save it
     """
@@ -20,12 +20,11 @@ def plot_correlations(data):
     plt.title("Correlation betweeen features")
 
     # Save plot
-    filename = "outputs/correlations-between-features.png"
-    os.makedirs("outputs", exist_ok=True)
+    filename = os.path.join(output_path, "correlations-between-features.png") 
     fig.savefig(filename)
 
 
-def plot_distribution(var_data, column_name=None):
+def plot_distribution(var_data, column_name=None, output_path="outputs"):
     """
     This function will make a distribution (graph) and save it
     """
@@ -56,11 +55,11 @@ def plot_distribution(var_data, column_name=None):
     ax[0].set_ylabel("Frequency")
 
     # Add lines for the mean, median, and mode
-    ax[0].axvline(x=min_val, color="gray", linestyle="dashed", linewidth=2)
-    ax[0].axvline(x=mean_val, color="cyan", linestyle="dashed", linewidth=2)
-    ax[0].axvline(x=med_val, color="red", linestyle="dashed", linewidth=2)
-    ax[0].axvline(x=mod_val, color="yellow", linestyle="dashed", linewidth=2)
-    ax[0].axvline(x=max_val, color="gray", linestyle="dashed", linewidth=2)
+    ax[0].axvline(x=min_val, color="gray", linestyle="dashed", linewidth=2, label="min")
+    ax[0].axvline(x=mean_val, color="cyan", linestyle="dashed", linewidth=2, label = "mean")
+    ax[0].axvline(x=med_val, color="red", linestyle="dashed", linewidth=2, label = "median")
+    ax[0].axvline(x=mod_val, color="yellow", linestyle="dashed", linewidth=2, label = "mode")
+    ax[0].axvline(x=max_val, color="gray", linestyle="dashed", linewidth=2 , label = "max")
     ax[0].legend()
 
     # Plot the boxplot
@@ -77,12 +76,11 @@ def plot_distribution(var_data, column_name=None):
     fig.suptitle(title)
 
     # Save plot
-    filename = "outputs/{}-distribution.png".format(column_name)
-    os.makedirs("outputs", exist_ok=True)
+    filename = os.path.join(output_path,"{}-distribution.png".format(column_name))
     fig.savefig(filename)
 
 
-def plot_scatters(x_y_data):
+def plot_scatters(x_y_data, output_path="outputs"):
     """
     Plot scatter plots with :y_column: on y-axis and save them. 
     """
@@ -97,38 +95,36 @@ def plot_scatters(x_y_data):
     plt.title("Scatter plot of {} vs {}".format(x_column,y_column))
 
     # Save plot
-    filename = "outputs/Scatter plot of {} vs {}.png".format(x_column,y_column)
-    os.makedirs("outputs", exist_ok=True)
+    filename = os.path.join(output_path,"Scatter plot of {} vs {}.png".format(x_column,y_column))
     fig.savefig(filename)
 
 def main():
     print("Loading Data...")
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--data-set', type=str,dest="data")
+    parser.add_argument('--data', type=str)
+    parser.add_argument('--plots_dir', type=str)
     args = parser.parse_args()
 
     diabetes = pd.read_csv(args.data, header= 0)
 
     # plot correlations
-    plot_correlations(data=diabetes)
+    plot_correlations(data=diabetes, output_path = args.plots_dir)
 
     # plot distributions
     exlude_column = set(["Diabetic", "PatientID"])
     columns = diabetes.columns.values
     for x in columns:
         if x not in exlude_column:
-            plot_distribution(var_data=diabetes[x],column_name=x)
+            plot_distribution(var_data=diabetes[x],column_name=x, output_path = args.plots_dir)
 
     # plot scatter plots
     columns = set(columns)
-
-
     column_comb=list(combinations(columns-exlude_column,2))
     column_comb = [list(x) for x in column_comb]
 
     for x_y_pairs in column_comb:
-        plot_scatters(diabetes[x_y_pairs])
+        plot_scatters(diabetes[x_y_pairs], output_path = args.plots_dir)
 
 if __name__ == "__main__":
     main()
