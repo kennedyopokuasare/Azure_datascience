@@ -180,3 +180,97 @@ run.register_model(
 ```
 
 <img src="./Build_Operate/experiments_with_scripts/2. registered model.png" alt="drawing" width="1200"/>
+
+
+## Creating components and a Pipeline
+
+Azure ML has APIs for using custom code to create components,  that can be used to build a Machine Learning pipeline. These components are similar to the ML Designer drag and drop UI compents.
+
+In this [notebook](./Build_Operate/pipelines/01-orchestrating-pipelines-with-azure-ml.ipynb), I create an end to end pipeplines for data preparation, exploratory data analysis and model training.
+
+To create pipelines, `Components` needs to be created, and optionally registered for reuse. For example the the component scripts needs to be created and written to a file.
+
+```python
+%%writefile {components_dirs["eda"]}/diabetes-exploratory-plots.py
+# Plot distrubtions step
+
+import pandas as pd
+import seaborn as sns
+import os
+import matplotlib.pyplot as plt
+from itertools import combinations
+import argparse
+
+# Create a function that we can re-use
+def plot_correlations(data,output_path="outputs"):
+    """
+    This function will make a correlation graph and save it
+    """
+    correlation = data.corr()
+    print("Correlation between features\n", correlation)
+
+    fig = plt.figure(figsize=(10, 12))
+    sns.heatmap(data=correlation, annot=True)
+    plt.title("Correlation betweeen features")
+
+    # Save plot
+    filename = os.path.join(output_path, "correlations-between-features.png") 
+    fig.savefig(filename)
+
+def main():
+    print("Loading Data...")
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--data', type=str)
+    parser.add_argument('--plots_dir', type=str)
+    args = parser.parse_args()
+
+    diabetes = pd.read_csv(args.data, header= 0)
+
+    # plot correlations
+    plot_correlations(data=diabetes, output_path = args.plots_dir)
+
+if __name__ == "__main__":
+    main()
+
+```
+
+The script is then used to create a component, where you specify the inputs and outputs of the component, the command to run the python script and other component properties. 
+
+```python
+
+eda_command = command(
+    name="eda_diabetes",
+    display_name="Exploratory data analysis",
+    description="Reads the diabetes csv data and plot exploratory data analysis graphs",
+    inputs=dict(data=Input(type="uri_file")),
+    outputs=dict(plots_dir=Output(type="uri_folder", mode="rw_mount")),
+    code=components_dirs["eda"],
+    command="python diabetes-exploratory-plots.py --data ${{inputs.data}} --plots ${{outputs.plots_dir}}",
+    environment=command_env,
+    experiment_name=experiment_name,
+)
+
+# Now we register the component to the workspace
+eda_command_component = ml_client.create_or_update(eda_command.component)
+
+# Create (register) the component in your workspace
+print(
+    f"Component {eda_command_component.name} with Version {eda_command_component.version} is registered"
+)
+
+```
+
+The `Component` will then be registed in the workspace (Azure ML studio)
+
+<img src="./Build_Operate/pipelines/02.registered_component.png" alt="drawing" width="1200"/>
+
+ Multiple components can then be used to create a Pipeline. 
+
+ <img src="./Build_Operate/pipelines/03.completed_pipeline.png" alt="drawing" width="1200"/>
+
+
+| Complete Train step and logged metrics  | Distribution and Correlation plot from EDA step  |
+|---|---|
+|<img src="./Build_Operate/pipelines/04.Train_component_completed.png" alt="drawing" /> | <img src="./Build_Operate/pipelines/05.Correlation_plots.png" alt="drawing" />|   
+| <img src="./Build_Operate/pipelines/07.Logged_metrics.png" alt="drawing" />|<img src="./Build_Operate/pipelines/06.Distribution_plots.png" alt="drawing" /> |  
