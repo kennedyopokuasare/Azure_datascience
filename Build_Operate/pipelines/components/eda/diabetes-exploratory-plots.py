@@ -5,6 +5,7 @@ import seaborn as sns
 import os
 import matplotlib.pyplot as plt
 from itertools import combinations
+import argparse
 
 # Create a function that we can re-use
 def plot_correlations(data):
@@ -100,24 +101,34 @@ def plot_scatters(x_y_data):
     os.makedirs("outputs", exist_ok=True)
     fig.savefig(filename)
 
+def main():
+    print("Loading Data...")
 
-print("Loading Data...")
-diabetes = pd.read_csv("../../data/diabetes.csv")
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--data-set', type=str,dest="data")
+    args = parser.parse_args()
 
-# plot correlations
-plot_correlations(data=diabetes)
+    diabetes = pd.read_csv(args.data, header= 0)
 
-# plot distributions
-columns = diabetes.columns.values
-for x in columns:
-    plot_distribution(var_data=diabetes[x],column_name=x)
+    # plot correlations
+    plot_correlations(data=diabetes)
 
-# plot scatter plots
-columns = set(columns)
-exlude_column = set(["Diabetic", "PatientID"])
+    # plot distributions
+    exlude_column = set(["Diabetic", "PatientID"])
+    columns = diabetes.columns.values
+    for x in columns:
+        if x not in exlude_column:
+            plot_distribution(var_data=diabetes[x],column_name=x)
 
-column_comb=list(combinations(columns-exlude_column,2))
-column_comb = [list(x) for x in column_comb]
+    # plot scatter plots
+    columns = set(columns)
 
-for x_y_pairs in column_comb:
-    plot_scatters(diabetes[x_y_pairs])
+
+    column_comb=list(combinations(columns-exlude_column,2))
+    column_comb = [list(x) for x in column_comb]
+
+    for x_y_pairs in column_comb:
+        plot_scatters(diabetes[x_y_pairs])
+
+if __name__ == "__main__":
+    main()
