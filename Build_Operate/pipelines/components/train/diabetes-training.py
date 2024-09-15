@@ -40,8 +40,8 @@ def main():
     mlflow.log_metric("num_test_samples:", x_test.shape[0])
     print("num_features:", x_train.shape[1])
     mlflow.log_metric("num_features:", x_train.shape[1])
-    print("features:", x_train.columns.values)
-    mlflow.log_param("features:", x_train.columns.values)
+    print("features:", train_df.columns.values)
+    mlflow.log_param("features:", train_df.columns.values)
 
 
     # train a logistic regression model
@@ -60,8 +60,8 @@ def main():
     # calculate AUC
     y_scores = model.predict_proba(x_test)
     auc = roc_auc_score(y_test,y_scores[:,1])
-    print('AUC:' + str(auc))
-    mlflow.log_metric('AUC:' + str(auc))
+    print('AUC:', str(auc))
+    mlflow.log_metric('AUC:', str(auc))
 
     # Save the model to file
     print("Saving model to file")
